@@ -1,0 +1,45 @@
+camera:
+  resolution: [1280, 960]   # higher res = more detection range
+  fps: 30
+  exposure_us: 5000          # short exposure reduces motion blur on descent
+
+apriltag:
+  family: tag36h11
+  nthreads: 4                # RPi 4 has 4 cores — use them
+  quad_decimate: 2.0         # speed/range tradeoff: 1.0 = full res, 2.0 = faster
+  quad_sigma: 0.0
+  refine_edges: True
+  decode_sharpening: 0.25
+
+camera_calibration:
+  fx: 970.0                  
+  fy: 970.0
+  cx: 640.0
+  cy: 480.0
+  dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+marker:
+  tag_size_m: 0.21           # physical side length of printed tag in meters
+
+mounting:
+  # Camera offset from vehicle CoM in body frame (meters, FRD convention)
+  pos_x: 0.0
+  pos_y: 0.0
+  pos_z: 0.05                # 5 cm below CoM
+  yaw_deg: 0.0               # 0 = X axis forward; 180 = camera rotated 180°
+
+mavlink:
+  port: /dev/serial0          # hardware UART on RPi GPIO 14/15
+  baud: 230400
+  output_hz: 20
+  system_id: 1
+  component_id: 195           # MAV_COMP_ID_CAMERA
+
+filter:
+  process_noise: 0.01
+  measurement_noise: 0.1
+
+logging:
+  level: INFO
+  file: /home/pi/planding.log
+  max_bytes: 5242880          # 5Mb
