@@ -1,0 +1,10 @@
+# In /boot/firmware/config.txt, add:
+enable_uart=1
+dtoverlay=disable-bt          # free up UART0 from Bluetooth
+
+# In /boot/firmware/cmdline.txt, REMOVE:
+# console=serial0,115200      # don't attach a login console to the UART
+
+sudo reboot
+# Verify: /dev/serial0 should now be a clean UART
+ls -la /dev/serial*
