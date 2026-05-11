@@ -31,17 +31,22 @@ def main():
     detector  = AprilTagDetector(cfg['apriltag'])
     estimator = PoseEstimator(cfg['camera_calibration'], cfg['marker'])
     transform = FrameTransformer(cfg['mounting'])
-    kf        = KalmanFilter3D(cfg['filter'])
+    kalman        = KalmanFilter3D(cfg['filter'])
     sender    = MAVLinkSender(cfg['mavlink'])
 
+    # open the MAVLink connection to the autopilot 
     sender.connect()
+    # spawn the camera capture thread and begin capturing frames
     camera.start()
+    # spawn the MAVLink output thread which sends LANDING_TARGET
     sender.start()
 
-    log.info("Precision landing pipeline running")
+    log.info("Precision landing module running...")
     no_detect_streak = 0
 
     try:
+        # retrieve a frame, detect tags, estimate pose, transform, filter, and send
+        # main detection and processing cycle; runs until an exception breaks out of it
         while True:
             try:
                 frame = camera.frame_queue.get(timeout=1.0)
@@ -54,8 +59,8 @@ def main():
 
             if best is None:
                 no_detect_streak += 1
-                if no_detect_streak > 10:  # ~0.3 s at 30 fps
-                    kf.reset()
+                if no_detect_streak > 10:
+                    kalman.reset()
                     sender.clear()
                     if no_detect_streak % 30 == 0:
                         log.warning("Target not detected")
@@ -67,7 +72,7 @@ def main():
                 continue
 
             body_vec = transform.to_body_frame(tvec)
-            body_smooth = kf.update(body_vec)
+            body_smooth = kalman.update(body_vec)
             angle_x, angle_y = transform.body_to_angles(body_smooth)
 
             sender.update(body_smooth, angle_x, angle_y)

@@ -1,45 +1,47 @@
 camera:
-  resolution: [1280, 960]   # higher res = more detection range
-  fps: 30
-  exposure_us: 5000          # short exposure reduces motion blur on descent
+  resolution: [1280, 960]   # working resolution fed into the detection pipeline
+  fps: 30                   # Frames per second requested from the camera driver
+  exposure_us: 5000         # shutter exposure time in microseconds
 
 apriltag:
-  family: tag36h11
-  nthreads: 4                # RPi 4 has 4 cores — use them
-  quad_decimate: 2.0         # speed/range tradeoff: 1.0 = full res, 2.0 = faster
-  quad_sigma: 0.0
-  refine_edges: True
-  decode_sharpening: 0.25
+  family: tag36h11        # tag family to detect; will ignore markers from other families 
+  nthreads: 4             # number of CPU threads the detector spawns internally for quad-detection; may equal the number of RPi cores
+  quad_decimate: 2.0      # detector internally downscales the image by this factor
+  quad_sigma: 0.0         # 0.0 means no blur is applied, only increase if there are many false positives in very noisy images
+  refine_edges: True      # refine the position of each tag corner; better accuracy
+  decode_sharpening: 0.25 # higher values enhance tag contrast, helping decode out of focus or at an angle. 0.25 is the library default and works well usually. 
 
+# camera calibration values come from calibration.py script, these yet are placeholders
 camera_calibration:
-  fx: 970.0                  
-  fy: 970.0
-  cx: 640.0
-  cy: 480.0
-  dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+  fx: 970.0      # focal length of the lens in the x direction in pixels     
+  fy: 970.0      # focal length of the lens in the y direction in pixels 
+  cx: 640.0      # x-coordinate of the principal point: pixel location where the optical axis of the lens pierces the image plane
+  cy: 480.0      # y-coordinate of the principal point
+  dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0] # distortion coefficients
 
 marker:
-  tag_size_m: 0.21           # physical side length of printed tag in meters
+  tag_size_m: 0.21   # physical side length of printed tag in meters
 
 mounting:
-  # Camera offset from vehicle CoM in body frame (meters, FRD convention)
+  # x-offset, y-offset and z-offset of the camera lens from the vehicle's 
+  # center of mass in meters, in the body FRD (Forward-Right-Down) frame.
   pos_x: 0.0
   pos_y: 0.0
-  pos_z: 0.05                # 5 cm below CoM
-  yaw_deg: 0.0               # 0 = X axis forward; 180 = camera rotated 180°
+  pos_z: 0.05   # downward camera is usually 5cm lower              
+  yaw_deg: 0.0  # rotation of the camera around the vertical axis relative to the vehicle's forward direction in degrees
 
 mavlink:
-  port: /dev/serial0          # hardware UART on RPi GPIO 14/15
-  baud: 230400
-  output_hz: 20
-  system_id: 1
-  component_id: 195           # MAV_COMP_ID_CAMERA
+  port: /dev/serial0  # serial port or network address to use for MAVLink comm
+  baud: 230400         # serial baud rate
+  output_hz: 20    # how many LANDING_TARGET messages per second module sends to the autopilot
+  system_id: 1     # MAVLink system ID
+  component_id: 195 # MAVLink component ID, identifying which component within the system is sending the message
 
 filter:
-  process_noise: 0.01
-  measurement_noise: 0.1
+  process_noise: 0.01   # process noise covariance Q in the Kalman filter
+  measurement_noise: 0.1 # measurement noise covariance R
 
 logging:
-  level: INFO
-  file: /home/pi/planding.log
-  max_bytes: 5242880          # 5Mb
+  level: INFO            # minimum severity of log messages to record
+  file: /home/pi/planding.log  # absolute path to the log file on the RPi filesystem
+  max_bytes: 5242880          # maximum size of the log file in bytes before it is rotated

@@ -12,16 +12,12 @@ class AprilTagDetector:
             refine_edges=cfg['refine_edges'],
             decode_sharpening=cfg['decode_sharpening'],
         )
-
+    # return list of Detection objects, empty if none found
     def detect(self, gray_frame):
-        """Returns list of Detection objects, empty if none found."""
         return self.detector.detect(gray_frame)
-
+    # select the most reliable detection 
+    # correct method for single tag targets
     def best_detection(self, detections):
-        """
-        Pick the detection with the highest decision margin (confidence).
-        If you use multi-marker targets, aggregate them instead.
-        """
         if not detections:
             return None
         return max(detections, key=lambda d: d.decision_margin)

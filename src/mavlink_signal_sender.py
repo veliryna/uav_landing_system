@@ -7,7 +7,7 @@ class MAVLinkSender:
     def __init__(self, cfg):
         self.cfg = cfg
         self._lock = threading.Lock()
-        self._latest = None          # (body_vec, timestamp_us)
+        self._latest = None          
         self._stop = threading.Event()
 
     def connect(self):
@@ -30,12 +30,10 @@ class MAVLinkSender:
         self._stop.set()
 
     def update(self, body_vec, angle_x, angle_y):
-        """Call from detection thread with latest estimate."""
         with self._lock:
             self._latest = (body_vec.copy(), angle_x, angle_y, time.time())
 
     def clear(self):
-        """Call when target is lost — stop sending stale data."""
         with self._lock:
             self._latest = None
 
