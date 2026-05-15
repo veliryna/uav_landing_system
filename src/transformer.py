@@ -27,8 +27,8 @@ class FrameTransformer:
     def to_body_frame(self, tvec_camera):
         # apply the rotation matrix to transform the camera-frame vector into the body frame. 
         body = self.R @ tvec_camera
-        # Add camera mounting offset to get tag offset from CoM
-        body += self.cam_offset
+        # minus camera mounting offset to get tag offset from CoM
+        body -= self.cam_offset
         return body  # [x_fwd, y_right, z_down]
 
     # Convert body-frame offset to angle_x (pitch) and angle_y (roll) in radians.
