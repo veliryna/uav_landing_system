@@ -11,11 +11,12 @@ class FrameTransformer:
             [ np.cos(yaw), np.sin(yaw), 0],
             [-np.sin(yaw), np.cos(yaw), 0],
             [           0,           0, 1],
-        ]) @ np.array([        # axis remapping matrix from camera RDF to body FRD
-            [0, 0, 1],   
-            [1, 0, 0],   
-            [0, 1, 0],   
+        ]) @ np.array([
+            [ 0, -1, 0],   # body x = -camera y
+            [ 1,  0, 0],   # body y =  camera x
+            [ 0,  0, 1],   # body z =  camera z
         ])
+
         self.R = R_cam_to_body
         self.cam_offset = np.array([
             mount_cfg['pos_x'],
@@ -29,7 +30,7 @@ class FrameTransformer:
         body = self.R @ tvec_camera
         # minus camera mounting offset to get tag offset from CoM
         body -= self.cam_offset
-        return body  # [x_fwd, y_right, z_down]
+        return body 
 
     # Convert body-frame offset to angle_x (pitch) and angle_y (roll) in radians.
     # ArduPilot uses pitch and roll if position_valid=0.
