@@ -24,7 +24,7 @@ class TestAprilTagDetector:
 
     def test_detects_known_tag(self):
         """Should detect tag ID 0 in its image."""
-        gray = load_gray('ubuntu_testing/tag_examples/tag36h11-37-angled.jpg')
+        gray = load_gray('tests/tag_examples/tag36h11-37-angled.jpg')
         detections = self.det.detect(gray)
         assert len(detections) > 0, "No tags detected in known tag image"
         ids = [d.tag_id for d in detections]
@@ -50,7 +50,7 @@ class TestAprilTagDetector:
 
     def test_best_detection_picks_highest_margin(self):
         """best_detection should pick detection with highest decision_margin."""
-        gray = load_gray('ubuntu_testing/tag_examples/tag36h11-37-angled.jpg')
+        gray = load_gray('tests/tag_examples/tag36h11-37-angled.jpg')
         detections = self.det.detect(gray)
         if len(detections) < 2:
             pytest.skip("Need 2+ detections for this test")
@@ -60,7 +60,7 @@ class TestAprilTagDetector:
 
     def test_detection_corners_shape(self):
         """Detected corners should have shape (4, 2)."""
-        gray = load_gray('ubuntu_testing/tag_examples/tag36h11-37-angled.jpg')
+        gray = load_gray('tests/tag_examples/tag36h11-37-angled.jpg')
         detections = self.det.detect(gray)
         assert len(detections) > 0
         corners = detections[0].corners
@@ -68,14 +68,14 @@ class TestAprilTagDetector:
 
     def test_detection_margin_positive(self):
         """Decision margin should be positive for a clean detection."""
-        gray = load_gray('ubuntu_testing/tag_examples/tag36h11-37-angled.jpg')
+        gray = load_gray('tests/tag_examples/tag36h11-37-angled.jpg')
         detections = self.det.detect(gray)
         assert len(detections) > 0
         assert detections[0].decision_margin > 0
 
     def test_multiple_tags_in_frame(self):
         """Should detect multiple tags"""
-        t0 = load_gray('ubuntu_testing/tag_examples/tags-multiple.webp')
+        t0 = load_gray('tests/tag_examples/tags-multiple.webp')
         detections = self.det.detect(t0)
         ids = {d.tag_id for d in detections}
         print(f"  Detected IDs in two-tag frame: {ids}")

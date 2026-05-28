@@ -1,10 +1,9 @@
 """
 test_video_pipeline.py
 ─────────────────────────────────────────────────────────────────────────────
-Offline test harness for the precision landing pipeline.
+Offline test for the precision landing pipeline.
 Replaces CameraCapture and MAVLinkSender with an MP4 reader.
-All other modules (detector, pose estimator, transformer, Kalman filter)
-run exactly as they would on the vehicle.
+Testing modules apriltag detector, pose estimator, transformer, Kalman filter
 
 Usage
 ─────
@@ -31,9 +30,6 @@ Output
     • matplotlib trajectory plot on exit (x, y, z over time + top-down path)
     • Optional saved annotated MP4
 
-Requirements
-────────────
-    pip install opencv-python pupil-apriltags numpy pyyaml matplotlib
 """
 
 import sys
