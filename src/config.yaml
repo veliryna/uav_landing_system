@@ -1,33 +1,33 @@
 camera:
-  resolution: [1280, 960]   # working resolution fed into the detection pipeline
+  resolution: [1920, 1080]   # working resolution fed into the detection pipeline
   fps: 30                   # Frames per second requested from the camera driver
   exposure_us: 5000         # shutter exposure time in microseconds
 
 apriltag:
   family: tag36h11        # tag family to detect; will ignore markers from other families 
   nthreads: 4             # number of CPU threads the detector spawns internally for quad-detection; may equal the number of RPi cores
-  quad_decimate: 2.0      # detector internally downscales the image by this factor
+  quad_decimate: 1.0      # detector internally downscales the image by this factor
   quad_sigma: 0.0         # 0.0 means no blur is applied, only increase if there are many false positives in very noisy images
   refine_edges: True      # refine the position of each tag corner; better accuracy
   decode_sharpening: 0.25 # higher values enhance tag contrast, helping decode out of focus or at an angle. 0.25 is the library default and works well usually. 
 
 # camera calibration values come from calibration.py script, these yet are placeholders
 camera_calibration:
-  fx: 970.0      # focal length of the lens in the x direction in pixels     
-  fy: 970.0      # focal length of the lens in the y direction in pixels 
-  cx: 640.0      # x-coordinate of the principal point: pixel location where the optical axis of the lens pierces the image plane
-  cy: 480.0      # y-coordinate of the principal point
+  fx: 1080.0      # focal length of the lens in the x direction in pixels     
+  fy: 1080.0      # focal length of the lens in the y direction in pixels 
+  cx: 960.0      # x-coordinate of the principal point: pixel location where the optical axis of the lens pierces the image plane
+  cy: 540.0      # y-coordinate of the principal point
   dist_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0] # distortion coefficients
 
 marker:
-  tag_size_m: 0.21   # physical side length of printed tag in meters
+  tag_size_m: 0.16   # physical side length of printed tag in meters
 
 mounting:
   # x-offset, y-offset and z-offset of the camera lens from the vehicle's 
   # center of mass in meters, in the body FRD (Forward-Right-Down) frame.
   pos_x: 0.0
   pos_y: 0.0
-  pos_z: 0.05   # downward camera is usually 5cm lower              
+  pos_z: 0.00   # downward camera is usually lower then CoM              
   yaw_deg: 0.0  # rotation of the camera around the vertical axis relative to the vehicle's forward direction in degrees
 
 mavlink:
