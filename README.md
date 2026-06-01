@@ -1,5 +1,9 @@
 # uav_landing_system
 
+## Ardupilot SITL
+
+<img width="432" height="618" alt="Screenshot from 2026-06-01 20-22-26" src="https://github.com/user-attachments/assets/ada126b2-962a-4e20-965f-3d207bc74d16" />
+
 ## How to run tests
 
 ### Test local video
