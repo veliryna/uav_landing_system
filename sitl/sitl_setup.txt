@@ -1,0 +1,15 @@
+param set ARMING_OPTIONS 0
+param set FS_THR_ENABLE 0
+param set FS_EKF_ACTION 0
+param set FS_CRASH_CHECK 0
+param set PLND_ENABLED 1
+param set PLND_TYPE 1
+param set PLND_EST_TYPE 0
+
+mode guided
+
+arm throttle force
+
+takeoff 15
+
+mode land
